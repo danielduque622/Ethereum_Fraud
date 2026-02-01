@@ -7,7 +7,8 @@ import os
 from dotenv import load_dotenv
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
-
+import shap
+import matplotlib.pyplot as plt
 
 # Load environment variables
 load_dotenv(".env")
@@ -223,6 +224,44 @@ if st.button("Predict"):
             st.progress(fraud_prob)
 
             st.write(f"Fraud Risk Score: {fraud_prob:.2%}")
+
+# ... inside your 'if st.button("Predict"):' block ...
+
+    if prediction_label:
+        st.divider()
+        st.subheader("🔍 Prediction Analysis (Explainability)")
+
+        # 1. Extract the actual XGBoost model from the GridSearchCV wrapper
+        # Note: Using TreeExplainer is best for XGBoost performance
+        actual_model = model.best_estimator_ 
+        explainer = shap.TreeExplainer(actual_model)
+        
+        # 2. Calculate SHAP values for the specific input
+        # model_features is already scaled and log-transformed from your previous step
+        # Inside the explanation block
+        feature_names = list(raw_stats.keys())
+        df_features = pd.DataFrame(model_features, columns=feature_names)
+
+        # Explain the DataFrame instead of the numpy array
+        shap_results = explainer(df_features)
+
+        # 3. Create the Visualization
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        # We use .values[0] to get the explanation for the single wallet entered
+        # Mapping back to raw_stats.keys() ensures the labels are readable
+        shap.plots.waterfall(shap_results[0], max_display=10, show=False)
+        
+        st.pyplot(plt.gcf())
+        plt.clf() 
+
+        st.info("""
+        **How to read this chart:**
+        * **f(x)**: The final model output (log-odds).
+        * **E[f(X)]**: The base value (average risk across all wallets).
+        * **Red arrows**: These features *increased* the suspicion of fraud.
+        * **Blue arrows**: These features *decreased* the suspicion of fraud.
+        """)
 
 
     else:

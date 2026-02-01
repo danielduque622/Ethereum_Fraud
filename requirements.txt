@@ -10,3 +10,4 @@ python-dotenv
 web3
 jupyter 
 numpy
+shap
