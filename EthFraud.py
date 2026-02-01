@@ -225,20 +225,16 @@ if st.button("Predict"):
 
             st.write(f"Fraud Risk Score: {fraud_prob:.2%}")
 
-# ... inside your 'if st.button("Predict"):' block ...
 
     if prediction_label:
         st.divider()
         st.subheader("🔍 Prediction Analysis (Explainability)")
 
-        # 1. Extract the actual XGBoost model from the GridSearchCV wrapper
         # Note: Using TreeExplainer is best for XGBoost performance
         actual_model = model.best_estimator_ 
         explainer = shap.TreeExplainer(actual_model)
         
         # 2. Calculate SHAP values for the specific input
-        # model_features is already scaled and log-transformed from your previous step
-        # Inside the explanation block
         feature_names = list(raw_stats.keys())
         df_features = pd.DataFrame(model_features, columns=feature_names)
 
