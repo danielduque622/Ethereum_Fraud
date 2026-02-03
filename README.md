@@ -1,4 +1,7 @@
 # Ethereum Wallet Fraud Detection App
+
+https://ethereumfraud-qh2b25evuhdaoesrpqgbem.streamlit.app/
+
 # Overview
 
 This application is a Streamlit-based web interface that uses a trained XGBoost classification model to assess whether an Ethereum wallet address is likely to be fraudulent or non-fraudulent based on on-chain transactional behavior.
