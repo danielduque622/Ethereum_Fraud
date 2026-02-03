@@ -41,7 +41,7 @@ def form_query_string(address, page, offset, api_key):
 def get_address_stats(address):
     try:
         # api_key = os.environ.get("ETHERSCAN_API_KEY")
-        api_key = os.environ["ETHERSCAN_API_KEY"]
+        api_key = st.secrets["ETHERSCAN_API_KEY"]
 
         if not api_key:
             st.error("Missing ETHERSCAN_API_KEY environment variable")
