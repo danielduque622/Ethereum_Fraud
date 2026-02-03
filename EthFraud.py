@@ -40,7 +40,7 @@ def form_query_string(address, page, offset, api_key):
 # Aggregate transactional data for a given address
 def get_address_stats(address):
     try:
-        # api_key = os.environ.get("ETHERSCAN_API_KEY")
+        #api_key = os.environ.get("ETHERSCAN_API_KEY")
         api_key = st.secrets["ETHERSCAN_API_KEY"]
 
         if not api_key:
@@ -178,14 +178,31 @@ st.title("Fraudulent Ethereum Wallet Detection App")
 # Input field for Ethereum address
 address = st.text_input("Enter Ethereum Wallet Address:")
 
-if st.button("Predict"):
+# Create two columns for the buttons
+col_predict, col_example = st.columns([1, 4])
+
+# Logic for buttons
+predict_clicked = col_predict.button("Predict")
+example_clicked = col_example.button("Example Fraud Wallet")
+
+# Determine which address to use
+target_address = None
+if predict_clicked:
     if address:
-        st.info("Fetching transactional data...")
-        raw_stats = get_address_stats(address)
+        target_address = address
+    else:
+            st.error("Please enter a valid address first.")
+elif example_clicked:
+        target_address = "0xd42393df90d582bd8a5493171f0173e3a017d391"
 
-        model_features = np.asarray(prepare_model_features(raw_stats)).reshape(1, -1)
+    # Run the model if we have a target address
+if target_address:
+    st.info(f"Fetching transactional data for: {target_address}")
+    raw_stats = get_address_stats(target_address)
 
-        if raw_stats:
+    model_features = np.asarray(prepare_model_features(raw_stats)).reshape(1, -1)
+
+    if raw_stats:
             st.write("Transactional Data:")
             col1, col2, col3 = st.columns(3)
 
