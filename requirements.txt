@@ -11,3 +11,4 @@ web3
 jupyter 
 numpy
 shap
+altair<5
