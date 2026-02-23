@@ -2,7 +2,7 @@ pandas
 scikit-learn
 matplotlib
 seaborn
-streamlit
+streamlit>=1.54.0
 xgboost
 joblib
 ipykernel
